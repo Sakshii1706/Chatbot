@@ -1,0 +1,114 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - book_ticket
+  - check_booking
+
+entities:
+  - source
+  - destination
+  - date_time
+  - seats
+  - booking_ref
+
+slots:
+  source:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: source
+      - type: from_text
+        conditions:
+          - active_loop: ticket_form
+            requested_slot: source
+  destination:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: destination
+      - type: from_text
+        conditions:
+          - active_loop: ticket_form
+            requested_slot: destination
+  date_time:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: date_time
+      - type: from_text
+        conditions:
+          - active_loop: ticket_form
+            requested_slot: date_time
+  seats:
+    type: float
+    influence_conversation: true
+    mappings:
+      - type: from_text
+        conditions:
+          - active_loop: ticket_form
+            requested_slot: seats
+  booking_ref:
+    type: text
+    influence_conversation: false
+    mappings:
+      - type: from_entity
+        entity: booking_ref
+      - type: from_text
+        conditions:
+          - active_loop: booking_form
+            requested_slot: booking_ref
+
+forms:
+  ticket_form:
+    required_slots:
+      - source
+      - destination
+      - date_time
+      - seats
+  booking_form:
+    required_slots:
+      - booking_ref
+
+responses:
+  utter_greet:
+    - text: |
+        Hello! 👋 I'm your Bangalore Metro assistant. I can help you book tickets.
+        ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ ಬೆಂಗಳೂರು ಮೆಟ್ರೋ ಸಹಾಯಕ. ಟಿಕೆಟ್ ಬುಕ್ ಮಾಡಲು ಸಹಾಯ ಮಾಡುತ್ತೇನೆ.
+  utter_goodbye:
+    - text: |
+        Goodbye! Have a safe journey. 🚇
+        ವಿದಾಯ! ನಿಮ್ಮ ಪ್ರಯಾಣ ಸುರಕ್ಷಿತವಾಗಿರಲಿ.
+  utter_ask_source:
+    - text: |
+        Please tell me your source station.
+        ದಯವಿಟ್ಟು ನಿಮ್ಮ ಪ್ರಾರಂಭ ಸ್ಟೇಷನ್ ಹೇಳಿ.
+  utter_ask_destination:
+    - text: |
+        Great. Now tell me your destination station.
+        ಉತ್ತಮ. ಈಗ ಗಮ್ಯ ಸ್ಥಳದ ಸ್ಟೇಷನ್ ಹೇಳಿ.
+  utter_ask_date_time:
+    - text: |
+        When do you want to travel? You can say "today 6 pm" or "tomorrow 9:30 am".
+        ನೀವು ಯಾವಾಗ ಪ್ರಯಾಣ ಬಯಸುತ್ತೀರಿ? "ಇಂದು ಸಂಜೆ 6 ಗಂಟೆ" ಅಥವಾ "ನಾಳೆ ಬೆಳಗ್ಗೆ 9:30" ಎಂದು ಹೇಳಬಹುದು.
+  utter_ask_seats:
+    - text: |
+        How many seats do you need? (1-6)
+        ನಿಮಗೆ ಎಷ್ಟು ಸೀಟುಗಳು ಬೇಕು? (1-6)
+  utter_submit:
+    - text: |
+        Noted. Booking from {source} to {destination} at {date_time} for {seats} seat(s). I will now check availability.
+        ಗಮನಿಸಲಾಗಿದೆ. {source} ಇಂದ {destination} ಗೆ {date_time} ಸಮಯಕ್ಕೆ {seats} ಸೀಟು(ಗಳು)ಗಾಗಿ ಪರಿಶೀಲಿಸುತ್ತಿದ್ದೇನೆ.
+  utter_ask_booking_ref:
+    - text: |
+        Please share your booking reference (e.g., BMRC-123456-7890).
+        ದಯವಿಟ್ಟು ನಿಮ್ಮ ಬುಕಿಂಗ್ ಉಲ್ಲೇಖ ಸಂಖ್ಯೆ ನೀಡಿ (ಉದಾ., BMRC-123456-7890).
+
+actions:
+  - validate_ticket_form
+  - action_submit_ticket_form
+  - action_check_booking

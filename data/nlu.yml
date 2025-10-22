@@ -1,0 +1,71 @@
+version: "3.1"
+
+nlu:
+  - intent: greet
+    examples: |
+      - hey
+      - hello
+      - hi
+      - good morning
+      - good evening
+      - ನಮಸ್ಕಾರ
+      - ಹೈ
+      - हेलो
+
+  - intent: goodbye
+    examples: |
+      - bye
+      - goodbye
+      - see you
+      - take care
+      - ನಂತರ ಭೇಟಿ ಆಗೋಣ
+      - ವಿದಾಯ
+      - अलविदा
+
+  - intent: book_ticket
+    examples: |
+      - I want to book a metro ticket
+      - Book a ticket
+      - Need a ticket from [Majestic](source) to [Indiranagar](destination)
+      - Ticket from [Jayanagar](source) to [MG Road](destination)
+      - [Nagasandra](source) to [Yelachenahalli](destination)
+      - ನನಗೆ ಮೆಟ್ರೋ ಟಿಕೆಟ್ ಬೇಕು
+      - [ಮೇಜಸ್ಟಿಕ್](source) ಇಂದ [ಇಂದಿರಾನಗರ](destination) ಗೆ ಟಿಕೆಟ್
+      - मुझे मेट्रो टिकट चाहिए
+      - Book from [Majestic](source) to [MG Road](destination) [today 6 pm](date_time) for [2](seats)
+      - [Indiranagar](source) to [Jayanagar](destination) [tomorrow 9:30 am](date_time) [3](seats) seats
+      - [ಮೇಜಸ್ಟಿಕ್](source) ಇಂದ [MG Road](destination) [ಇಂದು ಸಂಜೆ 6 ಗಂಟೆ](date_time) [2](seats)
+      - [ಇಂದಿರಾನಗರ](source) ಇಂದ [ಜಯನಗರ](destination) [ನಾಳೆ ಬೆಳಗ್ಗೆ 9:30](date_time) [3](seats)
+
+  - lookup: source
+    examples: |
+      - Majestic
+      - Indiranagar
+      - MG Road
+      - Jayanagar
+      - Yelachenahalli
+      - Nagasandra
+      - Baiyappanahalli
+      - Mysuru Road
+
+  - lookup: destination
+    examples: |
+      - Majestic
+      - Indiranagar
+      - MG Road
+      - Jayanagar
+      - Yelachenahalli
+      - Nagasandra
+      - Baiyappanahalli
+      - Mysuru Road
+  - regex: seats
+    examples: |
+      - \b[1-6]\b
+
+  - intent: check_booking
+    examples: |
+      - Check my booking [BMRC-1729151234-4567](booking_ref)
+      - status of booking [BMRC-999999-1111](booking_ref)
+      - What about ref [BMRC-123456-7890](booking_ref)
+      - ನನ್ನ ಬುಕಿಂಗ್ [BMRC-123456-7890](booking_ref) ಸ್ಥಿತಿ ಏನು?
+      - ಉಲ್ಲೇಖ [BMRC-1729151234-4567](booking_ref) ಬಗ್ಗೆ ಮಾಹಿತಿ

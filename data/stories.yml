@@ -1,0 +1,16 @@
+version: "3.1"
+
+stories:
+  - story: happy path book ticket
+    steps:
+      - intent: greet
+      - action: utter_greet
+      - intent: book_ticket
+      - action: ticket_form
+      - active_loop: ticket_form
+      - slot_was_set:
+          - source: Majestic
+      - slot_was_set:
+          - destination: Indiranagar
+      - active_loop: null
+      - action: action_submit_ticket_form

@@ -1,0 +1,40 @@
+version: "3.1"
+
+rules:
+  - rule: Respond to greet
+    steps:
+      - intent: greet
+      - action: utter_greet
+
+  - rule: Respond to goodbye
+    steps:
+      - intent: goodbye
+      - action: utter_goodbye
+
+  - rule: Activate ticket form on booking intent
+    steps:
+      - intent: book_ticket
+      - action: ticket_form
+      - active_loop: ticket_form
+
+  - rule: Submit ticket form
+    condition:
+      - active_loop: ticket_form
+    steps:
+      - action: ticket_form
+      - active_loop: null
+      - action: action_submit_ticket_form
+
+  - rule: Activate booking form on check intent
+    steps:
+      - intent: check_booking
+      - action: booking_form
+      - active_loop: booking_form
+
+  - rule: Submit booking form
+    condition:
+      - active_loop: booking_form
+    steps:
+      - action: booking_form
+      - active_loop: null
+      - action: action_check_booking

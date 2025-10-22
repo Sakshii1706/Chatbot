@@ -1,0 +1,22 @@
+# Python venvs
+.venv/
+.venv3*/
+
+# Rasa models and caches
+models/
+.rasa/
+
+# Logs and tickets
+logs/
+tickets/
+
+# Bytecode and caches
+__pycache__/
+*.pyc
+
+# Local databases
+/data/booking.db
+
+.DS_Store
+Thumbs.db
+.vscode/
