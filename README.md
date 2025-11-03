@@ -1,3 +1,82 @@
+# Online Chatbot-Based Ticketing System (Rasa + WhatsApp)
+
+This project is a Windows-friendly Rasa chatbot for Bangalore Metro ticket booking with:
+- Bilingual guided form (English + Kannada) collecting source, destination, date/time, and seats
+- Availability check with TTL cache, mock payment flow, QR e-ticket generation
+- SQLite persistence and booking lookup by reference
+- Flask bridge to Twilio WhatsApp webhook with optional signature validation
+- PowerShell scripts to validate, train, start servers, run the bridge, and expose via ngrok
+
+## Fast path to send “hi” on WhatsApp
+
+1) Start everything and get a public URL
+
+```powershell
+./scripts/start_all.ps1 -RasaUrl http://localhost:5005 -Port 8000
+```
+
+2) In Twilio, set the inbound webhook to the printed URL
+- Use {PUBLIC_URL}/webhook/twilio on your Messaging Service (or WhatsApp Sandbox page)
+
+3) From your phone, WhatsApp “hi” to your Twilio WhatsApp number
+- Sandbox: send “join <your-code>” once to the Sandbox number, then “hi”
+- Business number: just send “hi”
+
+You should receive the bilingual greeting and booking prompts.
+
+Quick start (Windows, PowerShell)
+1) Create and activate a Python 3.10 virtualenv (recommended):
+	- python -m venv .venv310; .\.venv310\Scripts\Activate.ps1
+
+2) Install dependencies:
+	- python -m pip install --upgrade pip; pip install -r requirements.txt
+
+3) Validate Rasa data and train a model:
+	- .\scripts\validate.ps1
+	- If needed: rasa train (or use .\scripts\retrain_and_reload.ps1)
+
+4) Start action and Rasa servers (two terminals):
+	- .\scripts\start_servers.ps1
+
+5) Start the Flask bridge for WhatsApp (third terminal):
+	- .\scripts\start_flask.ps1
+
+6) Expose locally via ngrok (optional, required for Twilio):
+	- .\scripts\ngrok.ps1
+	- Copy the printed public URL and set it as your Twilio Messaging Service webhook URL for incoming messages to: {PUBLIC_URL}/webhook/twilio
+
+7) Send a message to your WhatsApp number linked to your Twilio Sandbox/Service and say: hi
+Key ports
+- Rasa server: 5005
+- Rasa action server: 5055
+- Flask bridge: 8000
+
+Environment variables (optional)
+- RASA_URL: URL of the Rasa REST webhook (default http://localhost:5005)
+- PORT: Flask port (default 8000)
+- TWILIO_SIGNATURE_CHECK: true/false (default false)
+- TWILIO_AUTH_TOKEN: required if signature check is enabled
+
+Structure
+- actions/          Python actions (validators, booking submit, lookup)
+- data/             NLU, stories, and rules
+- scripts/          PowerShell helpers (Windows)
+- tickets/          Generated QR codes (served by Flask)
+- app.py            Flask <-> Twilio WhatsApp bridge
+- domain.yml        Intents, slots, forms, responses, actions
+- config.yml        NLU pipeline and policies
+- endpoints.yml     Action server configuration
+- requirements.txt  Dependencies
+
+Security notes
+- Never commit secrets (Twilio tokens, etc.). Store them as environment variables.
+- If you ever shared your Twilio token publicly, rotate it immediately in the Twilio Console.
+
+Troubleshooting
+- First run is slow due to TensorFlow warm-up. Be patient on Windows.
+- If validation shows unused utterances, it’s benign with forms.
+- If ngrok isn’t in PATH, install it from https://ngrok.com/ and ensure ngrok.exe is available.
+
 # Bangalore Metro Ticketing Chatbot
 
 End-to-end Rasa 3.x chatbot for booking Bangalore Metro tickets with bilingual prompts, slot-filling forms, QR e-tickets, and booking lookup. See scripts in `scripts/` and configuration in `domain.yml`, `data/`, and `endpoints.yml`.
